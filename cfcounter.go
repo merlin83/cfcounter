@@ -37,6 +37,7 @@ var (
 
 	// a buffered channel to send work requests
 	TokenQueue chan TOKEN_RANGE
+	UIFinished chan bool
 )
 
 // this uses the dispatcher pattern described in http://marcio.io/2015/07/handling-1-million-requests-per-minute-with-golang/
@@ -238,14 +239,15 @@ func InitTermUI() {
 		termui.Handle("/timer/1s", func(e termui.Event) {
 			draw()
 
-			if int(FinishedTasks) == *NumPartitions {
-				// sleep for 500ms for it to draw finish the last render
-				time.Sleep(500 * time.Millisecond)
+			if int(FinishedTasks) >= *NumPartitions {
+				// sleep a short while for it to finish the last render
+				time.Sleep(1000 * time.Millisecond)
 				termui.StopLoop()
 			}
 		})
 
 		termui.Loop()
+		UIFinished <- true
 	}()
 
 }
@@ -289,6 +291,7 @@ func main() {
 
 	// initialize queue
 	TokenQueue = make(chan TOKEN_RANGE, 100)
+	UIFinished = make(chan bool, 1)
 
 	// initialize dispatchers
 	dispatcher := NewDispatcher()
@@ -316,7 +319,7 @@ func main() {
 	}
 
 	WorkersWaitGroup.Wait()
+	<-UIFinished
 
-	log.Println("Finished Tasks: ", FinishedTasks, " Total Tasks: ", EnqueuedTasks, " Total count: ", TOTAL_COUNT)
-	log.Println("Total count: ", TOTAL_COUNT)
+	log.Printf("Total number of rows in %v.%v: %v", *CQL_KEYSPACE, *CQL_COLUMNFAMILY, TOTAL_COUNT)
 }
