@@ -1,0 +1,18 @@
+cfcounter
+=========
+
+Cfcounter is a tool to count the number of rows in a column family for Cassandra
+
+
+Motivation
+----------
+- Fast and easy tool to get an accurate count for a column family in Cassandra
+- Serves as a quick exercise to familiarize myself with the Dispatcher pattern described in http://marcio.io/2015/07/handling-1-million-requests-per-minute-with-golang/
+- Play around with the awesome termui library
+
+Thanks
+------
+The gocql authors
+Marcio Castilho http://marcio.io/
+https://github.com/gizak/termui/
+
