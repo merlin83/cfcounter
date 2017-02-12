@@ -165,8 +165,6 @@ func InitTermUI() {
 	}
 
 	go func() {
-		defer termui.Close()
-
 		startTime := time.Now()
 
 		ft := termui.NewPar("")
@@ -240,13 +238,20 @@ func InitTermUI() {
 			draw()
 
 			if int(FinishedTasks) >= *NumPartitions {
-				// sleep a short while for it to finish the last render
-				time.Sleep(1000 * time.Millisecond)
 				termui.StopLoop()
 			}
 		})
 
 		termui.Loop()
+		termui.Close()
+
+		// hack to retain the UI display
+		// without termui.Close() then termui.Init(), the output is mangled
+		termui.Init()
+		draw()
+		// sleep a short while for it to finish the last render
+		time.Sleep(2000 * time.Millisecond)
+
 		UIFinished <- true
 	}()
 
