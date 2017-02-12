@@ -1,7 +1,7 @@
 cfcounter
 =========
 
-Cfcounter is a tool to count the number of rows in a column family for Cassandra
+cfcounter is a tool to count the number of rows in a column family for Cassandra
 
 
 Motivation
@@ -9,6 +9,32 @@ Motivation
 - Fast and easy tool to get an accurate count for a column family in Cassandra
 - Serves as a quick exercise to familiarize myself with the Dispatcher pattern described in http://marcio.io/2015/07/handling-1-million-requests-per-minute-with-golang/
 - Play around with the awesome termui library
+
+
+Installation
+------------
+- git clone https://github.com/merlin83/cfcounter.git
+- go get -u
+- go build cfcounter.go
+
+
+Usage
+-------
+
+Usage of ./cfcounter:
+  -CassandraAddresses string
+        Cassandra cluster addresses, multiple addresses seperated by comma (default "127.0.0.1,127.0.0.2,127.0.0.3")
+  -ColumnFamily string
+        ColumnFamily (default "cf")
+  -Keyspace string
+        Keyspace to use (default "default")
+  -NumPartitions int
+        Number of Partitions (default 10240)
+  -NumWorkers int
+        Number of Workers (default 10)
+  -PrimaryKey string
+        Primary Key column (default "id")
+
 
 Thanks
 ------
