@@ -260,9 +260,9 @@ func InitTermUI() {
 func main() {
 	// parse flags
 	CassandraAddresses := flag.String("CassandraAddresses", "127.0.0.1,127.0.0.2,127.0.0.3", "Cassandra cluster addresses, multiple addresses seperated by comma")
-	Keyspace := flag.String("Keyspace", "default", "Keyspace to use")
-	ColumnFamily := flag.String("ColumnFamily", "cf", "ColumnFamily")
-	PrimaryKey := flag.String("PrimaryKey", "id", "Primary Key column")
+	CQL_KEYSPACE = flag.String("Keyspace", "default", "Keyspace to use")
+	CQL_COLUMNFAMILY = flag.String("ColumnFamily", "cf", "ColumnFamily")
+	CQL_PRIMARYKEYCOLUMN = flag.String("PrimaryKey", "id", "Primary Key column")
 	NumWorkers = flag.Int("NumWorkers", 10, "Number of Workers")
 	NumPartitions = flag.Int("NumPartitions", 10240, "Number of Partitions")
 
@@ -275,17 +275,13 @@ func main() {
 		USE_CassandraAddresses = append(USE_CassandraAddresses, _addr)
 	}
 
-	CQL_KEYSPACE = Keyspace
-	CQL_COLUMNFAMILY = ColumnFamily
-	CQL_PRIMARYKEYCOLUMN = PrimaryKey
-
 	num_partitions := int64(*NumPartitions)
 	WorkersWaitGroup.Add(*NumWorkers)
 
 	// connect to the cluster
 	CQL_CLUSTER = gocql.NewCluster(USE_CassandraAddresses...)
 	CQL_CLUSTER.ProtoVersion = 4
-	CQL_CLUSTER.Keyspace = *Keyspace
+	CQL_CLUSTER.Keyspace = *CQL_KEYSPACE
 	CQL_CLUSTER.Consistency = gocql.Quorum
 	CQL_CLUSTER.NumConns = 10
 
